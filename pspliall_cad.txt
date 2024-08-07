@@ -1,0 +1,661 @@
+Running experiment with seed: 2222
+Global seed set to 2222
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 2222
+[rank: 0] Global seed set to 2222
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 2222
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+
+  | Name               | Type             | Params
+--------------------------------------------------------
+0 | model              | Caduceus         | 1.9 M 
+1 | encoder            | Identity         | 0     
+2 | decoder            | SequenceDecoder  | 771   
+3 | train_torchmetrics | MetricCollection | 0     
+4 | val_torchmetrics   | MetricCollection | 0     
+5 | test_torchmetrics  | MetricCollection | 0     
+--------------------------------------------------------
+1.9 M     Trainable params
+0         Non-trainable params
+1.9 M     Total params
+7.741     Total estimated model params size (MB)
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+Epoch 0, global step 106: 'val/f1_macro' reached 0.78448 (best 0.78448), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 1, global step 212: 'val/f1_macro' reached 0.88113 (best 0.88113), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 2, global step 318: 'val/f1_macro' reached 0.89941 (best 0.89941), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 3, global step 424: 'val/f1_macro' reached 0.95070 (best 0.95070), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 4, global step 530: 'val/f1_macro' reached 0.95247 (best 0.95247), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 5, global step 636: 'val/f1_macro' was not in top 1
+Epoch 6, global step 742: 'val/f1_macro' reached 0.95353 (best 0.95353), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 7, global step 848: 'val/f1_macro' reached 0.95906 (best 0.95906), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 8, global step 954: 'val/f1_macro' was not in top 1
+Epoch 9, global step 1060: 'val/f1_macro' reached 0.96055 (best 0.96055), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 10, global step 1166: 'val/f1_macro' reached 0.96100 (best 0.96100), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 11, global step 1272: 'val/f1_macro' was not in top 1
+Epoch 12, global step 1378: 'val/f1_macro' was not in top 1
+Epoch 13, global step 1484: 'val/f1_macro' was not in top 1
+Epoch 14, global step 1590: 'val/f1_macro' was not in top 1
+Epoch 15, global step 1696: 'val/f1_macro' was not in top 1
+Epoch 16, global step 1802: 'val/f1_macro' was not in top 1
+Epoch 17, global step 1908: 'val/f1_macro' was not in top 1
+Epoch 18, global step 2014: 'val/f1_macro' was not in top 1
+Epoch 19, global step 2120: 'val/f1_macro' reached 0.96141 (best 0.96141), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+`Trainer.fit` stopped: `max_epochs=20` reached.
+seed 2222: 0.961
+Running experiment with seed: 42
+Global seed set to 42
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 0] Global seed set to 42
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+[rank: 1] Global seed set to 42
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 42
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+
+  | Name               | Type             | Params
+--------------------------------------------------------
+0 | model              | Caduceus         | 1.9 M 
+1 | encoder            | Identity         | 0     
+2 | decoder            | SequenceDecoder  | 771   
+3 | train_torchmetrics | MetricCollection | 0     
+4 | val_torchmetrics   | MetricCollection | 0     
+5 | test_torchmetrics  | MetricCollection | 0     
+--------------------------------------------------------
+1.9 M     Trainable params
+0         Non-trainable params
+1.9 M     Total params
+7.741     Total estimated model params size (MB)
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+Epoch 0, global step 106: 'val/f1_macro' reached 0.74532 (best 0.74532), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 1, global step 212: 'val/f1_macro' reached 0.90772 (best 0.90772), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 2, global step 318: 'val/f1_macro' reached 0.92113 (best 0.92113), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 3, global step 424: 'val/f1_macro' reached 0.95282 (best 0.95282), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 4, global step 530: 'val/f1_macro' was not in top 1
+Epoch 5, global step 636: 'val/f1_macro' reached 0.95420 (best 0.95420), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 6, global step 742: 'val/f1_macro' reached 0.95534 (best 0.95534), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 7, global step 848: 'val/f1_macro' was not in top 1
+Epoch 8, global step 954: 'val/f1_macro' was not in top 1
+Epoch 9, global step 1060: 'val/f1_macro' was not in top 1
+Epoch 10, global step 1166: 'val/f1_macro' was not in top 1
+Epoch 11, global step 1272: 'val/f1_macro' reached 0.95813 (best 0.95813), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 12, global step 1378: 'val/f1_macro' was not in top 1
+Epoch 13, global step 1484: 'val/f1_macro' was not in top 1
+Epoch 14, global step 1590: 'val/f1_macro' was not in top 1
+Epoch 15, global step 1696: 'val/f1_macro' was not in top 1
+Epoch 16, global step 1802: 'val/f1_macro' was not in top 1
+Epoch 17, global step 1908: 'val/f1_macro' was not in top 1
+Epoch 18, global step 2014: 'val/f1_macro' was not in top 1
+Epoch 19, global step 2120: 'val/f1_macro' was not in top 1
+`Trainer.fit` stopped: `max_epochs=20` reached.
+seed 42: 0.958
+Running experiment with seed: 43
+Global seed set to 43
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 0] Global seed set to 43
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+[rank: 1] Global seed set to 43
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 43
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+
+  | Name               | Type             | Params
+--------------------------------------------------------
+0 | model              | Caduceus         | 1.9 M 
+1 | encoder            | Identity         | 0     
+2 | decoder            | SequenceDecoder  | 771   
+3 | train_torchmetrics | MetricCollection | 0     
+4 | val_torchmetrics   | MetricCollection | 0     
+5 | test_torchmetrics  | MetricCollection | 0     
+--------------------------------------------------------
+1.9 M     Trainable params
+0         Non-trainable params
+1.9 M     Total params
+7.741     Total estimated model params size (MB)
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+Epoch 0, global step 106: 'val/f1_macro' reached 0.79146 (best 0.79146), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 1, global step 212: 'val/f1_macro' reached 0.92960 (best 0.92960), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 2, global step 318: 'val/f1_macro' reached 0.95450 (best 0.95450), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 3, global step 424: 'val/f1_macro' was not in top 1
+Epoch 4, global step 530: 'val/f1_macro' was not in top 1
+Epoch 5, global step 636: 'val/f1_macro' was not in top 1
+Epoch 6, global step 742: 'val/f1_macro' reached 0.95933 (best 0.95933), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 7, global step 848: 'val/f1_macro' reached 0.95977 (best 0.95977), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 8, global step 954: 'val/f1_macro' was not in top 1
+Epoch 9, global step 1060: 'val/f1_macro' was not in top 1
+Epoch 10, global step 1166: 'val/f1_macro' reached 0.96143 (best 0.96143), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 11, global step 1272: 'val/f1_macro' was not in top 1
+Epoch 12, global step 1378: 'val/f1_macro' was not in top 1
+Epoch 13, global step 1484: 'val/f1_macro' was not in top 1
+Epoch 14, global step 1590: 'val/f1_macro' was not in top 1
+Epoch 15, global step 1696: 'val/f1_macro' was not in top 1
+Epoch 16, global step 1802: 'val/f1_macro' was not in top 1
+Epoch 17, global step 1908: 'val/f1_macro' was not in top 1
+Epoch 18, global step 2014: 'val/f1_macro' was not in top 1
+Epoch 19, global step 2120: 'val/f1_macro' was not in top 1
+`Trainer.fit` stopped: `max_epochs=20` reached.
+seed 43: 0.961
+Running experiment with seed: 44
+Global seed set to 44
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 44
+[rank: 0] Global seed set to 44
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 44
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+
+  | Name               | Type             | Params
+--------------------------------------------------------
+0 | model              | Caduceus         | 1.9 M 
+1 | encoder            | Identity         | 0     
+2 | decoder            | SequenceDecoder  | 771   
+3 | train_torchmetrics | MetricCollection | 0     
+4 | val_torchmetrics   | MetricCollection | 0     
+5 | test_torchmetrics  | MetricCollection | 0     
+--------------------------------------------------------
+1.9 M     Trainable params
+0         Non-trainable params
+1.9 M     Total params
+7.741     Total estimated model params size (MB)
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+Epoch 0, global step 106: 'val/f1_macro' reached 0.73140 (best 0.73140), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 1, global step 212: 'val/f1_macro' reached 0.89684 (best 0.89684), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 2, global step 318: 'val/f1_macro' reached 0.94478 (best 0.94478), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 3, global step 424: 'val/f1_macro' reached 0.95004 (best 0.95004), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 4, global step 530: 'val/f1_macro' was not in top 1
+Epoch 5, global step 636: 'val/f1_macro' was not in top 1
+Epoch 6, global step 742: 'val/f1_macro' reached 0.95635 (best 0.95635), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 7, global step 848: 'val/f1_macro' was not in top 1
+Epoch 8, global step 954: 'val/f1_macro' reached 0.95998 (best 0.95998), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 9, global step 1060: 'val/f1_macro' was not in top 1
+Epoch 10, global step 1166: 'val/f1_macro' was not in top 1
+Epoch 11, global step 1272: 'val/f1_macro' was not in top 1
+Epoch 12, global step 1378: 'val/f1_macro' reached 0.96517 (best 0.96517), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 13, global step 1484: 'val/f1_macro' was not in top 1
+Epoch 14, global step 1590: 'val/f1_macro' was not in top 1
+Epoch 15, global step 1696: 'val/f1_macro' was not in top 1
+Epoch 16, global step 1802: 'val/f1_macro' was not in top 1
+Epoch 17, global step 1908: 'val/f1_macro' was not in top 1
+Epoch 18, global step 2014: 'val/f1_macro' was not in top 1
+Epoch 19, global step 2120: 'val/f1_macro' was not in top 1
+`Trainer.fit` stopped: `max_epochs=20` reached.
+seed 44: 0.965
+Running experiment with seed: 45
+Global seed set to 45
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 45
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+[rank: 0] Global seed set to 45
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 45
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+
+  | Name               | Type             | Params
+--------------------------------------------------------
+0 | model              | Caduceus         | 1.9 M 
+1 | encoder            | Identity         | 0     
+2 | decoder            | SequenceDecoder  | 771   
+3 | train_torchmetrics | MetricCollection | 0     
+4 | val_torchmetrics   | MetricCollection | 0     
+5 | test_torchmetrics  | MetricCollection | 0     
+--------------------------------------------------------
+1.9 M     Trainable params
+0         Non-trainable params
+1.9 M     Total params
+7.741     Total estimated model params size (MB)
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+Epoch 0, global step 106: 'val/f1_macro' reached 0.72146 (best 0.72146), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 1, global step 212: 'val/f1_macro' reached 0.91389 (best 0.91389), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 2, global step 318: 'val/f1_macro' reached 0.94612 (best 0.94612), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 3, global step 424: 'val/f1_macro' was not in top 1
+Epoch 4, global step 530: 'val/f1_macro' reached 0.94952 (best 0.94952), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 5, global step 636: 'val/f1_macro' was not in top 1
+Epoch 6, global step 742: 'val/f1_macro' reached 0.95537 (best 0.95537), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 7, global step 848: 'val/f1_macro' reached 0.95953 (best 0.95953), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 8, global step 954: 'val/f1_macro' reached 0.96283 (best 0.96283), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 9, global step 1060: 'val/f1_macro' was not in top 1
+Epoch 10, global step 1166: 'val/f1_macro' reached 0.96357 (best 0.96357), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 11, global step 1272: 'val/f1_macro' was not in top 1
+Epoch 12, global step 1378: 'val/f1_macro' reached 0.96590 (best 0.96590), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 13, global step 1484: 'val/f1_macro' was not in top 1
+Epoch 14, global step 1590: 'val/f1_macro' reached 0.96792 (best 0.96792), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 15, global step 1696: 'val/f1_macro' was not in top 1
+Epoch 16, global step 1802: 'val/f1_macro' was not in top 1
+Epoch 17, global step 1908: 'val/f1_macro' was not in top 1
+Epoch 18, global step 2014: 'val/f1_macro' was not in top 1
+Epoch 19, global step 2120: 'val/f1_macro' was not in top 1
+`Trainer.fit` stopped: `max_epochs=20` reached.
+seed 45: 0.968
+Running experiment with seed: 46
+Global seed set to 46
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 46
+[rank: 0] Global seed set to 46
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 46
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+
+  | Name               | Type             | Params
+--------------------------------------------------------
+0 | model              | Caduceus         | 1.9 M 
+1 | encoder            | Identity         | 0     
+2 | decoder            | SequenceDecoder  | 771   
+3 | train_torchmetrics | MetricCollection | 0     
+4 | val_torchmetrics   | MetricCollection | 0     
+5 | test_torchmetrics  | MetricCollection | 0     
+--------------------------------------------------------
+1.9 M     Trainable params
+0         Non-trainable params
+1.9 M     Total params
+7.741     Total estimated model params size (MB)
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+Epoch 0, global step 106: 'val/f1_macro' reached 0.74720 (best 0.74720), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 1, global step 212: 'val/f1_macro' reached 0.89454 (best 0.89454), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 2, global step 318: 'val/f1_macro' reached 0.89874 (best 0.89874), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 3, global step 424: 'val/f1_macro' reached 0.93041 (best 0.93041), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 4, global step 530: 'val/f1_macro' was not in top 1
+Epoch 5, global step 636: 'val/f1_macro' reached 0.95305 (best 0.95305), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 6, global step 742: 'val/f1_macro' reached 0.95467 (best 0.95467), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 7, global step 848: 'val/f1_macro' reached 0.95609 (best 0.95609), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 8, global step 954: 'val/f1_macro' was not in top 1
+Epoch 9, global step 1060: 'val/f1_macro' reached 0.95659 (best 0.95659), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 10, global step 1166: 'val/f1_macro' was not in top 1
+Epoch 11, global step 1272: 'val/f1_macro' was not in top 1
+Epoch 12, global step 1378: 'val/f1_macro' reached 0.95746 (best 0.95746), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 13, global step 1484: 'val/f1_macro' reached 0.95979 (best 0.95979), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 14, global step 1590: 'val/f1_macro' was not in top 1
+Epoch 15, global step 1696: 'val/f1_macro' was not in top 1
+Epoch 16, global step 1802: 'val/f1_macro' was not in top 1
+Epoch 17, global step 1908: 'val/f1_macro' was not in top 1
+Epoch 18, global step 2014: 'val/f1_macro' was not in top 1
+Epoch 19, global step 2120: 'val/f1_macro' was not in top 1
+`Trainer.fit` stopped: `max_epochs=20` reached.
+seed 46: 0.960
+Running experiment with seed: 47
+Global seed set to 47
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 0] Global seed set to 47
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+[rank: 1] Global seed set to 47
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 47
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+
+  | Name               | Type             | Params
+--------------------------------------------------------
+0 | model              | Caduceus         | 1.9 M 
+1 | encoder            | Identity         | 0     
+2 | decoder            | SequenceDecoder  | 771   
+3 | train_torchmetrics | MetricCollection | 0     
+4 | val_torchmetrics   | MetricCollection | 0     
+5 | test_torchmetrics  | MetricCollection | 0     
+--------------------------------------------------------
+1.9 M     Trainable params
+0         Non-trainable params
+1.9 M     Total params
+7.741     Total estimated model params size (MB)
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+Epoch 0, global step 106: 'val/f1_macro' reached 0.76776 (best 0.76776), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 1, global step 212: 'val/f1_macro' reached 0.91971 (best 0.91971), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 2, global step 318: 'val/f1_macro' reached 0.93799 (best 0.93799), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 3, global step 424: 'val/f1_macro' reached 0.94558 (best 0.94558), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 4, global step 530: 'val/f1_macro' reached 0.94727 (best 0.94727), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 5, global step 636: 'val/f1_macro' reached 0.95370 (best 0.95370), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 6, global step 742: 'val/f1_macro' was not in top 1
+Epoch 7, global step 848: 'val/f1_macro' reached 0.95918 (best 0.95918), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 8, global step 954: 'val/f1_macro' was not in top 1
+Epoch 9, global step 1060: 'val/f1_macro' reached 0.96310 (best 0.96310), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 10, global step 1166: 'val/f1_macro' was not in top 1
+Epoch 11, global step 1272: 'val/f1_macro' reached 0.96313 (best 0.96313), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 12, global step 1378: 'val/f1_macro' was not in top 1
+Epoch 13, global step 1484: 'val/f1_macro' was not in top 1
+Epoch 14, global step 1590: 'val/f1_macro' reached 0.96368 (best 0.96368), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 15, global step 1696: 'val/f1_macro' reached 0.96466 (best 0.96466), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 16, global step 1802: 'val/f1_macro' was not in top 1
+Epoch 17, global step 1908: 'val/f1_macro' was not in top 1
+Epoch 18, global step 2014: 'val/f1_macro' was not in top 1
+Epoch 19, global step 2120: 'val/f1_macro' was not in top 1
+`Trainer.fit` stopped: `max_epochs=20` reached.
+seed 47: 0.965
+Running experiment with seed: 48
+Global seed set to 48
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 0] Global seed set to 48
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+[rank: 1] Global seed set to 48
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 48
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+
+  | Name               | Type             | Params
+--------------------------------------------------------
+0 | model              | Caduceus         | 1.9 M 
+1 | encoder            | Identity         | 0     
+2 | decoder            | SequenceDecoder  | 771   
+3 | train_torchmetrics | MetricCollection | 0     
+4 | val_torchmetrics   | MetricCollection | 0     
+5 | test_torchmetrics  | MetricCollection | 0     
+--------------------------------------------------------
+1.9 M     Trainable params
+0         Non-trainable params
+1.9 M     Total params
+7.741     Total estimated model params size (MB)
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+Epoch 0, global step 106: 'val/f1_macro' reached 0.78220 (best 0.78220), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 1, global step 212: 'val/f1_macro' reached 0.84828 (best 0.84828), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 2, global step 318: 'val/f1_macro' reached 0.90219 (best 0.90219), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 3, global step 424: 'val/f1_macro' reached 0.92011 (best 0.92011), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 4, global step 530: 'val/f1_macro' reached 0.93520 (best 0.93520), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 5, global step 636: 'val/f1_macro' reached 0.95657 (best 0.95657), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 6, global step 742: 'val/f1_macro' reached 0.95951 (best 0.95951), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 7, global step 848: 'val/f1_macro' was not in top 1
+Epoch 8, global step 954: 'val/f1_macro' was not in top 1
+Epoch 9, global step 1060: 'val/f1_macro' reached 0.96062 (best 0.96062), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 10, global step 1166: 'val/f1_macro' was not in top 1
+Epoch 11, global step 1272: 'val/f1_macro' was not in top 1
+Epoch 12, global step 1378: 'val/f1_macro' was not in top 1
+Epoch 13, global step 1484: 'val/f1_macro' was not in top 1
+Epoch 14, global step 1590: 'val/f1_macro' reached 0.96257 (best 0.96257), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 15, global step 1696: 'val/f1_macro' was not in top 1
+Epoch 16, global step 1802: 'val/f1_macro' reached 0.96358 (best 0.96358), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 17, global step 1908: 'val/f1_macro' was not in top 1
+Epoch 18, global step 2014: 'val/f1_macro' was not in top 1
+Epoch 19, global step 2120: 'val/f1_macro' was not in top 1
+`Trainer.fit` stopped: `max_epochs=20` reached.
+seed 48: 0.964
+Running experiment with seed: 49
+Global seed set to 49
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 0] Global seed set to 49
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+[rank: 1] Global seed set to 49
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 49
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+
+  | Name               | Type             | Params
+--------------------------------------------------------
+0 | model              | Caduceus         | 1.9 M 
+1 | encoder            | Identity         | 0     
+2 | decoder            | SequenceDecoder  | 771   
+3 | train_torchmetrics | MetricCollection | 0     
+4 | val_torchmetrics   | MetricCollection | 0     
+5 | test_torchmetrics  | MetricCollection | 0     
+--------------------------------------------------------
+1.9 M     Trainable params
+0         Non-trainable params
+1.9 M     Total params
+7.741     Total estimated model params size (MB)
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+Epoch 0, global step 106: 'val/f1_macro' reached 0.79398 (best 0.79398), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 1, global step 212: 'val/f1_macro' reached 0.86009 (best 0.86009), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 2, global step 318: 'val/f1_macro' reached 0.92625 (best 0.92625), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 3, global step 424: 'val/f1_macro' was not in top 1
+Epoch 4, global step 530: 'val/f1_macro' reached 0.95551 (best 0.95551), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 5, global step 636: 'val/f1_macro' reached 0.96207 (best 0.96207), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 6, global step 742: 'val/f1_macro' was not in top 1
+Epoch 7, global step 848: 'val/f1_macro' was not in top 1
+Epoch 8, global step 954: 'val/f1_macro' reached 0.96387 (best 0.96387), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 9, global step 1060: 'val/f1_macro' was not in top 1
+Epoch 10, global step 1166: 'val/f1_macro' was not in top 1
+Epoch 11, global step 1272: 'val/f1_macro' was not in top 1
+Epoch 12, global step 1378: 'val/f1_macro' was not in top 1
+Epoch 13, global step 1484: 'val/f1_macro' was not in top 1
+Epoch 14, global step 1590: 'val/f1_macro' was not in top 1
+Epoch 15, global step 1696: 'val/f1_macro' was not in top 1
+Epoch 16, global step 1802: 'val/f1_macro' was not in top 1
+Epoch 17, global step 1908: 'val/f1_macro' was not in top 1
+Epoch 18, global step 2014: 'val/f1_macro' was not in top 1
+Epoch 19, global step 2120: 'val/f1_macro' was not in top 1
+`Trainer.fit` stopped: `max_epochs=20` reached.
+seed 49: 0.964
+Running experiment with seed: 50
+Global seed set to 50
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+`Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+`Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 0] Global seed set to 50
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+[rank: 1] Global seed set to 50
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Some weights of CaduceusForMaskedLM were not initialized from the model checkpoint at kuleshov-group/caduceus-ph_seqlen-1k_d_model-256_n_layer-4_lr-8e-3 and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[rank: 1] Global seed set to 50
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [1,2,3,4]
+
+  | Name               | Type             | Params
+--------------------------------------------------------
+0 | model              | Caduceus         | 1.9 M 
+1 | encoder            | Identity         | 0     
+2 | decoder            | SequenceDecoder  | 771   
+3 | train_torchmetrics | MetricCollection | 0     
+4 | val_torchmetrics   | MetricCollection | 0     
+5 | test_torchmetrics  | MetricCollection | 0     
+--------------------------------------------------------
+1.9 M     Trainable params
+0         Non-trainable params
+1.9 M     Total params
+7.741     Total estimated model params size (MB)
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+Epoch 0, global step 106: 'val/f1_macro' reached 0.75549 (best 0.75549), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 1, global step 212: 'val/f1_macro' reached 0.90390 (best 0.90390), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 2, global step 318: 'val/f1_macro' reached 0.90412 (best 0.90412), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 3, global step 424: 'val/f1_macro' reached 0.95273 (best 0.95273), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 4, global step 530: 'val/f1_macro' reached 0.95305 (best 0.95305), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 5, global step 636: 'val/f1_macro' was not in top 1
+Epoch 6, global step 742: 'val/f1_macro' was not in top 1
+Epoch 7, global step 848: 'val/f1_macro' was not in top 1
+Epoch 8, global step 954: 'val/f1_macro' reached 0.95585 (best 0.95585), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 9, global step 1060: 'val/f1_macro' reached 0.95692 (best 0.95692), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 10, global step 1166: 'val/f1_macro' was not in top 1
+Epoch 11, global step 1272: 'val/f1_macro' reached 0.95893 (best 0.95893), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 12, global step 1378: 'val/f1_macro' was not in top 1
+Epoch 13, global step 1484: 'val/f1_macro' reached 0.96031 (best 0.96031), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 14, global step 1590: 'val/f1_macro' reached 0.96352 (best 0.96352), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 15, global step 1696: 'val/f1_macro' was not in top 1
+Epoch 16, global step 1802: 'val/f1_macro' was not in top 1
+Epoch 17, global step 1908: 'val/f1_macro' reached 0.96497 (best 0.96497), saving model to 'checkpoints/val/f1_macro.ckpt' as top 1
+Epoch 18, global step 2014: 'val/f1_macro' was not in top 1
+Epoch 19, global step 2120: 'val/f1_macro' was not in top 1
+`Trainer.fit` stopped: `max_epochs=20` reached.
+seed 50: 0.965
+best_metric_values: 0.96100 0.95800 0.96100 0.96500 0.96800 0.96000 0.96500 0.96400 0.96400 0.96500 

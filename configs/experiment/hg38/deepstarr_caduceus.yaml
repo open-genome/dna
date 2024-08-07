@@ -1,0 +1,123 @@
+# @package _global_
+defaults:
+  - /pipeline: deepstarr
+  - override /scheduler: cosine_warmup_timm
+
+# model: 
+#   _name_: convnext
+#   d_model: 128
+#   # max_length: ${dataset.max_length}
+#   max_length: 8193
+#   vocab_size: 12
+#   pad_vocab_size_multiple: 8
+#   k_size: 5
+
+model:
+  _name_: caduceus
+  mode: ph
+  size: 
+
+# model:
+#   _name_: denoise_hyena
+#   for_representation: true
+#   alphabet_size: 16
+#   num_cls: 0
+#   d_model: 256
+#   bidirectional: False
+#   args:
+#     clean_data: false
+#     hidden_dim: 256
+#     cls_expanded_simplex: true
+#     mode: dirichlet
+#     num_cnn_stacks: 2
+#     dropout: 0.1
+#     cls_free_guidance: false
+#     alpha_max: 8
+#     fix_alpha: 1e6
+#     alpha_scale: 2
+#     prior_pseudocount: 2
+#     max_length: 1024
+#     seed: ${train.seed}
+
+
+trainer:
+  accelerator: gpu
+  devices: 2
+  num_nodes: 1
+  accumulate_grad_batches: ${div_up:${train.global_batch_size}, ${eval:${trainer.devices} * ${dataset.batch_size} * ${trainer.num_nodes}}}
+  max_epochs: 100
+  precision: 32  # bf16 only a100
+  gradient_clip_val: 1.0
+  # strategy: null
+
+
+dataset:
+  # batch_size: 32  # Per GPU
+  batch_size: 2048
+  # max_length: 515 # select max that you want for this dataset
+  # dest_path: '/mnt/nas/share2/home/by/hyena-dna/data/genomic_benchmark/'
+  # d_output: 3  # binary classification by default
+  # use_padding: True
+  # padding_side: 'left'
+  # add_eos: False
+  # train_len: 289061  # update this according to above table
+  # __l_max: ${.max_length}
+  tokenizer_name: char
+  use_tokenizer: False
+  add_eos: false
+  rc_aug: false  # reverse complement augmentation
+  return_mask: false
+  padding_side: left
+  # num_workers: 1
+  # rc_aug: true  # reverse complement augmentation.  Didn't seem to help for human_nontata_promoters, but could be wrong
+
+scheduler:
+  t_in_epochs: False
+  t_initial: ${eval:${div_up:${dataset.train_len}, ${train.global_batch_size}} * ${trainer.max_epochs}}
+  warmup_lr_init: 1e-6
+  warmup_t: ${eval:${div_up:${dataset.train_len}, ${train.global_batch_size}} * ${trainer.max_epochs} * 0.01}
+  lr_min: ${eval:0.1 * ${optimizer.lr}}
+
+  # constant
+  # t_initial: ${eval:${div_up:${dataset.train_len}, ${train.global_batch_size}} * ${trainer.max_epochs}}
+  # warmup_t: 0
+  # lr_min: ${optimizer.lr}
+
+
+
+optimizer:
+  lr: 1e-3
+  weight_decay: 0.1
+
+# decoder: null # decoder is done by the cnn
+
+train:
+  gpu_mem: ${eval:"round(float(__import__('subprocess').check_output('nvidia-smi -i 0 --query-gpu=memory.total --format=csv,noheader,nounits', shell=True).strip().decode()) / 1000)"}
+  seed: 2222
+  global_batch_size: ${eval:${trainer.devices}*${dataset.batch_size}}
+  remove_test_loader_in_eval: False  # no test set in this benchmark
+  pretrained_model_strict_load: False  # false allows encoder/decoder to be used if new model uses it
+
+  # hyena
+  # for loading backbone and not head, requires both of these flags below
+  # pretrained_model_path: /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-16_02-18-03/last.ckpt # 128 1layer
+  # pretrained_model_path: /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-16_19-08-02/epoch=168-step=2873.ckpt # 256 1layer
+  # pretrained_model_path:  /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-17_14-12-23/epoch=990-step=16847.ckpt #/mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-17_14-12-23/epoch=569-step=9690.ckpt
+  # pretrained_model_path: null
+  # pretrained_model_path: /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-17_22-49-20/epoch=116-step=15561.ckpt # 256 4layer
+  # bidirectional
+  # pretrained_model_path: /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-26_20-34-19/epoch=445-step=29882.ckpt #/mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-25_04-23-26/epoch=1163-step=39576.ckpt #/mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-25_04-23-26/epoch=964-step=32810.ckpt  # denoise hyena
+  # pretrained_model_path: /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-30_11-59-05/epoch=35-step=2412.ckpt # add_embed fix
+  # causal
+  # pretrained_model_path: /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-25_20-16-05/epoch=1682-step=57222.ckpt
+  # pretrained_model_path: /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-27_19-27-31/epoch=28-step=1943.ckpt # concat time
+  # pretrained_model_path:  /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-05-04_01-29-00/epoch=14-step=1005.ckpt  #还能用/mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-30_00-29-54/epoch=743-step=49848.ckpt # concat time fix
+  # pretrained_moedl_path:  /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-05-04_04-21-58/epoch=235-step=15812.ckpt # 5 emb
+  # pretrained_model_path: /mnt/nas/share2/home/by/ddsm/promoter_design/sdedna_promoter_revision.sei.bestvalid.pth
+
+
+  # cnn
+  pretrained_model_path: null
+  pretrained_model_state_hook:
+    _name_: load_backbone
+    freeze_backbone: false  # seems to work much better if false (ie finetune entire model)

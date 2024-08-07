@@ -1,0 +1,9 @@
+Experiment: py_nt_denoisecnn
+Mean(best_mcc)	Range Difference
+1	
+Seed Value: 1
+Seed Value: 2
+Seed Value: 3
+Seed Value: 4
+Seed Value: 5
+Seed Value: 6

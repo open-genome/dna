@@ -1,0 +1,26 @@
+# @package _global_
+defaults:
+  - /trainer: default
+  - /loader: default
+  - /dataset: deepsea #configs/dataset/deepsea.yaml
+  - /task: multilabel_classification #configs/task/multilabel_classification.yaml???
+  - /optimizer: adamw
+  - /scheduler: plateau
+  - /callbacks: [base, checkpoint]
+
+task:
+  loss: deepsea_loss
+    # _name_: cross_entropy
+  metrics:
+    - ${dataset.metric}
+
+train:
+  monitor: test/${dataset.metric}
+  mode: max
+
+encoder: id
+
+# we need this for classification!
+decoder:
+  _name_: sequence
+  mode: pool

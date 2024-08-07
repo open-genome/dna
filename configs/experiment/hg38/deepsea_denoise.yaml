@@ -1,0 +1,100 @@
+# @package _global_
+defaults:
+  - /pipeline: deepsea #configs/pipeline/deepsea.yaml
+  - override /scheduler: cosine_warmup_timm
+
+model:
+  _name_: denoise_cnn
+  for_representation: true
+  alphabet_size: 5
+  num_cls: 0
+  d_model: 128
+  length: ${dataset.max_length}
+  kernel_size: 9
+  dilation: 4
+  out_dim: 2
+  use_outlinear: False
+  mlp: True
+  pretrain: False
+  forget: True
+  args:
+    clean_data: false
+    hidden_dim: 128
+    cls_expanded_simplex: true
+    mode: dirichlet
+    num_cnn_stacks: 1
+    dropout: 0.0
+    cls_free_guidance: false
+    alpha_max: 8
+    fix_alpha: 1e6
+    alpha_scale: 2
+    prior_pseudocount: 2
+    seed: ${train.seed}
+
+
+trainer:
+  accelerator: gpu
+  devices: 2
+  num_nodes: 1
+  accumulate_grad_batches: ${div_up:${train.global_batch_size}, ${eval:${trainer.devices} * ${dataset.batch_size} * ${trainer.num_nodes}}}
+  max_epochs: 50
+  precision: 32  # bf16 only a100
+  gradient_clip_val: 1.0
+  # strategy: null
+
+
+dataset:
+  # batch_size: 32  # Per GPU
+  # max_length: 515 # select max that you want for this dataset
+  # dest_path: '/mnt/nas/share2/home/by/hyena-dna/data/genomic_benchmark/'
+  # d_output: 3  # binary classification by default
+  # use_padding: True
+  # padding_side: 'left'
+  # add_eos: False
+  # train_len: 289061  # update this according to above table
+  # __l_max: ${.max_length}
+  batch_size: 256
+  max_length: 1024 # DeepSea uses 1000, BigBird uses 8000
+  tokenizer_name: char
+  train_len: 2200000 # 2188805 for filtered hg38 / 2200000 for hg19
+  rc_aug: false  # reverse complement augmentation
+  use_tokenizer: False
+  add_eos: false
+  return_mask: false
+  # padding_side: left
+  # num_workers: 1
+  # rc_aug: true  # reverse complement augmentation.  Didn't seem to help for human_nontata_promoters, but could be wrong
+
+scheduler:
+  t_in_epochs: False
+  t_initial: ${eval:${div_up:${dataset.train_len}, ${train.global_batch_size}} * ${trainer.max_epochs}}
+  warmup_lr_init: 1e-6
+  warmup_t: ${eval:${div_up:${dataset.train_len}, ${train.global_batch_size}} * ${trainer.max_epochs} * 0.01}
+  lr_min: ${eval:0.1 * ${optimizer.lr}}
+
+  # constant
+  # t_initial: ${eval:${div_up:${dataset.train_len}, ${train.global_batch_size}} * ${trainer.max_epochs}}
+  # warmup_t: 0
+  # lr_min: ${optimizer.lr}
+
+
+
+optimizer:
+  lr: 1e-5
+  weight_decay: 0.1
+
+train:
+  gpu_mem: ${eval:"round(float(__import__('subprocess').check_output('nvidia-smi -i 0 --query-gpu=memory.total --format=csv,noheader,nounits', shell=True).strip().decode()) / 1000)"}
+  seed: 2222
+  global_batch_size: ${eval:${trainer.devices}*${dataset.batch_size}}
+  remove_test_loader_in_eval: False  # no test set in this benchmark
+  pretrained_model_strict_load: False  # false allows encoder/decoder to be used if new model uses it
+  # for loading backbone and not head, requires both of these flags below
+  # pretrained_model_path: /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-16_02-18-03/last.ckpt # 128 1layer
+  # pretrained_model_path: /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-16_19-08-02/epoch=168-step=2873.ckpt # 256 1layer
+  # pretrained_model_path:  /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-17_14-12-23/epoch=990-step=16847.ckpt #/mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-17_14-12-23/epoch=569-step=9690.ckpt
+  # pretrained_model_path: /mnt/nas/share2/home/by/hyena-dna/outputs/2-256-1k.ckpt
+  # pretrained_model_path: /mnt/nas/share2/home/by/dirichlet-flow-matching/workdir/default_2024-04-17_22-49-20/epoch=116-step=15561.ckpt # 256 4layer
+  pretrained_model_state_hook:
+    _name_: load_backbone
+    freeze_backbone: false  # seems to work much better if false (ie finetune entire model)
