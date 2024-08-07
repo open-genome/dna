@@ -1,2 +1,1 @@
-# dna
-qwerth1234@126.com
+git clone git@github.com:gersteinlab/dna.git
