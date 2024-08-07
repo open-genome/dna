@@ -103,7 +103,7 @@ def bert_mask(seq, mask_token_id, pad_token_id, vocab_size, mask_prob=0.15, rand
 class DNABERT2Dataset(torch.utils.data.Dataset):
     def __init__(
         self,
-        split,  # split 参数可能不再需要
+        split,
         text_file,
         max_length,
         pad_max_length=None,
@@ -127,31 +127,35 @@ class DNABERT2Dataset(torch.utils.data.Dataset):
         self.return_augs = return_augs
         self.objective = objective
 
-        import psutil
-        # 读取文本文件
-        if split=="val" or split=="test":
-            split="dev"
-        text_path = Path(text_file+"/"+split+".txt")
-        assert text_path.exists(), 'path to text file must exist'
-        self.text = []
-        with open(text_path, 'r', encoding='ISO-8859-1') as f:
-            line = f.readline()
-            while line:
-                self.text.append(line.replace('\n', ''))  # 删除换行符并合并
-                line = f.readline()
+        self.split = split if split != "val" and split != "test" else "dev"
+        self.text_path = Path(f"{text_file}/{self.split}.txt")
+        
+        # 检查文件是否存在
+        assert self.text_path.exists(), 'path to text file must exist'
+
+        # 创建文件的内存映射
+        self.file = open(self.text_path, 'rb')  # 以二进制模式打开文件
+        self.mmap_file = mmap(self.file.fileno(), 0, access=ACCESS_READ)
+
+        # 计算文件的行数作为数据集的长度
+        self.length = sum(1 for _ in open(self.text_path, 'r', encoding='ISO-8859-1'))
+
+    def __del__(self):
+        # 关闭内存映射和文件
+        self.mmap_file.close()
+        self.file.close()
 
     def __len__(self):
-        return len(self.text)
-
-
-    def replace_value(self, x, old_value, new_value):
-        return torch.where(x == old_value, new_value, x)
+        return self.length
 
     def __getitem__(self, idx):
-        """Returns a sequence of specified len"""
-        line = self.text[idx]
+        # 定位到行的开始
+        line_start = self.mmap_file.find(b'\n', idx) + 1
+        # 定位到行的结束
+        line_end = self.mmap_file.find(b'\n', line_start)
+        # 读取行并解码
+        line = self.mmap_file[line_start:line_end].decode('ISO-8859-1').strip()
 
-        # if self.use_tokenizer:
         # 使用 tokenizer 处理文本
         tokens = self.tokenizer.encode(line, add_special_tokens=False, truncation=True, max_length=self.max_length)
 
@@ -165,7 +169,7 @@ class DNABERT2Dataset(torch.utils.data.Dataset):
         # 填充到 pad_max_length
         if len(tokens) < self.pad_max_length:
             if self.pad_interval:
-                tokens = tokens + [self.tokenizer.pad_token_id] * (self.pad_max_length - len(tokens))
+                tokens += [self.tokenizer.pad_token_id] * (self.pad_max_length - len(tokens))
             else:
                 tokens = [self.tokenizer.pad_token_id] * (self.pad_max_length - len(tokens)) + tokens
 
@@ -174,7 +178,7 @@ class DNABERT2Dataset(torch.utils.data.Dataset):
 
         if self.replace_N_token:
             # replace N token with a pad token, so we can ignore it in the loss
-            seq = self.replace_value(seq, self.tokenizer._vocab_str_to_int['N'], self.tokenizer.pad_token_id)
+            seq[seq == self.tokenizer._vocab_str_to_int['N']] = self.tokenizer.pad_token_id
 
         data = seq.clone()  # remove eos
         target = seq.clone()  # offset by 1, includes eos
