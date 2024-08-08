@@ -6,7 +6,7 @@ import pandas as pd
 import torch
 from random import randrange, random
 import numpy as np
-
+from mmap import mmap, ACCESS_READ
 
 """
 
@@ -137,7 +137,7 @@ class DNABERTSDataset(torch.utils.data.Dataset):
         else:
             split="debug_train"
         # text_path = Path(text_file+"/"+split+"_"+seq_name+".txt")
-        text_path = Path(text_file+"/"+split+".txt")
+        self.text_path = Path(text_file+"/"+split+".txt")
         # 检查文件是否存在
         assert self.text_path.exists(), 'path to text file must exist'
 
