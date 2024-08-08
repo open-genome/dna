@@ -9,7 +9,9 @@ Change the dataset.text_file for configs/experiment/xxx/xxx.yaml
 
 ### RUN
 ```
-conda env create -f environment.yml
+conda create -n dna python==3.8
 conda activate dna
+pip install -r requirement.txt
+pip install flash_attn==1.0.7 --no-build-isolation
 python train.py experiment='dnabert2/dnabert2_pretrain'
 ```
