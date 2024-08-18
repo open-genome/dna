@@ -7,6 +7,7 @@ import torch
 from random import randrange, random
 import numpy as np
 from mmap import mmap, ACCESS_READ
+import math
 
 """
 
@@ -139,33 +140,79 @@ class DNABERTSDataset(torch.utils.data.Dataset):
         # text_path = Path(text_file+"/"+split+"_"+seq_name+".txt")
         self.text_path = Path(text_file+"/"+split+".txt")
         # 检查文件是否存在
-        assert self.text_path.exists(), 'path to text file must exist'
-
-        # 创建文件的内存映射
-        self.file = open(self.text_path, 'rb')  # 以二进制模式打开文件
-        self.mmap_file = mmap(self.file.fileno(), 0, access=ACCESS_READ)
+        # assert self.text_path.exists(), 'path to text file must exist'
 
         # 计算文件的行数作为数据集的长度
-        self.length = sum(1 for _ in open(self.text_path, 'r', encoding='ISO-8859-1'))
+        self.length = self.calculate_length()
 
+        self.bin_path = Path(str(self.text_path)[:-4]+f".bin")
+        if not self.bin_path.exists():
+            self.convert_dna_to_binary(self.text_path, self.bin_path)
+        with open(str(self.bin_path)[:-4]+"_"+'padding_info.json', "r") as f:
+            self.padding_info = json.load(f)
+        self.read_binary_to_list_with_markers(self.bin_path) 
 
-    def __del__(self):
-        # 关闭内存映射和文件
-        self.mmap_file.close()
-        self.file.close()
+    def read_binary_to_list_with_markers(self, binary_file):
+        """从带有行标记的二进制文件中读取DNA序列，逐行添加到列表中"""     
+        self.lines = []
+    
+        with open(binary_file, 'rb') as file_in:
+            data = file_in.read()  # 读取整个文件到内存
+
+        marker = 0
+        for i in range(0, len(self.padding_info)):
+            row_length = self.padding_info[f"{i+1}"][0]
+            binary_row = data[marker:marker+row_length]
+            self.lines.append(binary_row)
+            marker = marker+row_length
+        return   
+
+    def calculate_length(self):
+        with open(self.text_path, 'r', encoding='ISO-8859-1') as file:
+            return sum(1 for _ in file)
+    
+    def base_to_bits(self, base):
+        """将DNA碱基转换为对应的2位二进制数"""
+        base_to_binary = {'A': '00', 'T': '01', 'C': '10', 'G': '11'}
+        return base_to_binary.get(base, '00')  # 如果找不到对应的碱基，使用'00'作为默认值
+
+    def bits_to_base(self, bits):
+        """将2位二进制数转换回DNA碱基"""
+        binary_to_base = {'00': 'A', '01': 'T', '10': 'C', '11': 'G'}
+        return binary_to_base.get(bits, 'N')  # 如果找不到对应的二进制数，使用'N'作为未知碱基
+
+    def convert_dna_to_binary(self, input_file, output_file):     
+        with open(input_file, 'r') as file_in, open(output_file, 'wb') as file_out:
+            padding_info = {}
+            for line_number, line in enumerate(file_in, 1):
+                binary_line = ''.join(self.base_to_bits(base) for base in line.strip())
+                padding = (8 - len(binary_line) % 8) % 8
+                binary_line += '0' * padding
+                padding_info[line_number] = []
+                padding_info[line_number].append(math.ceil(len(line.strip())/4))
+                padding_info[line_number].append(padding)
+
+                binary_bytes = int(binary_line, 2).to_bytes(math.ceil(len(binary_line) / 8), byteorder='big')
+                
+                file_out.write(binary_bytes)
+            with open(str(input_file)[:-4]+"_"+'padding_info.json', 'w') as json_file:
+                json.dump(padding_info, json_file)
 
     def __len__(self):
         return self.length
 
     def __getitem__(self, idx):
-        # 定位到行的开始
-        line_start = self.mmap_file.find(b'\n', idx) + 1
-        # 定位到行的结束
-        line_end = self.mmap_file.find(b'\n', line_start)
-        # 读取行并解码
-        line = self.mmap_file[line_start:line_end].decode('ISO-8859-1').strip()
+        binary_string = self.lines[idx]
+        binary_string = format(int.from_bytes(binary_string, byteorder='big'), f'0{8*len(binary_string)}b')
+        padding = self.padding_info[f"{idx+1}"][1]
+        if padding != 0:
+            binary_string = binary_string[:-padding]
+        line = []
+        # 每2位二进制数转换为一个DNA碱基
+        for i in range(0, len(binary_string), 2):
+            line.append(self.bits_to_base(binary_string[i:i+2]))
+        line = "".join(line)
 
-        # 使用 tokenizer 处理文本
         tokens = self.tokenizer.encode(line, add_special_tokens=False, truncation=True, max_length=self.max_length)
 
         if self.add_eos:
