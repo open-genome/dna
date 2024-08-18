@@ -1,8 +1,10 @@
 ```
 git clone git@github.com:gersteinlab/dna.git
 cd dna
-wget https://bydna.s3.us-east-2.amazonaws.com/data.tar.gz
-tar -xzvf data.tar.gz
+mkdir data
+cd data
+wget https://bydna.s3.us-east-2.amazonaws.com/bert_hg38.tar.gz
+tar -xzvf bert_hg38.tar.gz
 ```
 
 Change the dataset.text_file for configs/experiment/xxx/xxx.yaml
@@ -15,5 +17,5 @@ pip install torch==2.0.0+cu118 torchvision==0.15.1+cu118 torchaudio==2.0.1+cu118
 pip install -r requirements.txt
 python -m pip install setuptools==69.5.1
 pip install flash_attn==1.0.7 --no-build-isolation
-python train.py experiment='dnabert2/dnabert2_pretrain'
+python train.py experiment='dnabert2/dnabert2_hg38_pretrain'
 ```
