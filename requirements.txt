@@ -44,8 +44,7 @@ jsonschema==4.23.0
 jsonschema-specifications==2023.12.1
 jupyterlab_pygments==0.3.0
 liftover==1.1.18
-lightning-lite==1.8.0
-lightning-utilities==0.3.0
+pytorch-lightning==1.8.0
 lit==18.1.8
 Markdown==3.6
 markdown-it-py==3.0.0
