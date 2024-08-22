@@ -23,9 +23,10 @@ pip install torchmetrics
 pip install tensorboardX
 ```
 
-```
 
-small dataset: python3 train.py experiment='dnabert2/dnabert2_hg38_pretrain' wandb=null trainer.devices=8
+small dataset: 
+```
+python3 train.py experiment='dnabert2/dnabert2_hg38_pretrain' wandb=null trainer.devices=8
 ```
 
 or
