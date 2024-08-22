@@ -143,14 +143,13 @@ class DNABERTSDataset(torch.utils.data.Dataset):
         # 检查文件是否存在
         # assert self.text_path.exists(), 'path to text file must exist'
 
-        # 计算文件的行数作为数据集的长度
-        self.length = self.calculate_length()
 
         self.bin_path = Path(str(self.text_path)[:-4]+f".bin")
         if not self.bin_path.exists():
             self.convert_dna_to_binary(self.text_path, self.bin_path)
         with open(str(self.bin_path)[:-4]+"_"+'padding_info.json', "r") as f:
             self.padding_info = json.load(f)
+        self.length = self.calculate_length()
         self.read_binary_to_list_with_markers(self.bin_path) 
 
     def read_binary_to_list_with_markers(self, binary_file):
@@ -169,8 +168,7 @@ class DNABERTSDataset(torch.utils.data.Dataset):
         return   
 
     def calculate_length(self):
-        with open(self.text_path, 'r', encoding='ISO-8859-1') as file:
-            return sum(1 for _ in file)
+        return len(self.padding_info)
     
     def base_to_bits(self, base):
         """将DNA碱基转换为对应的2位二进制数"""
