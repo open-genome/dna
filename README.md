@@ -26,7 +26,7 @@ pip install tensorboardX
 
 small dataset: 
 ```
-python3 train.py experiment='dnabert2/dnabert2_hg38_pretrain' wandb=null trainer.devices=8
+python3 train.py experiment='dnabert2/dnabert2_hg38_pretrain' wandb=null trainer.devices=8 > output_small.txt
 ```
 
 or
