@@ -17,8 +17,9 @@ conda create -n dna python==3.8
 conda activate dna
 pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirements.txt
-python -m pip install setuptools==69.5.1
+python -m pip install setuptools==69.5.1 
+pip install pytorch-lightning==1.8.6
 pip install packaging
 pip install flash_attn==1.0.7 --no-build-isolation
-python train.py experiment='dnabert2/dnabert2_hg38_pretrain'
+python train.py experiment='dnabert2/dnabert2_hg38_pretrain' wandb=null
 ```
