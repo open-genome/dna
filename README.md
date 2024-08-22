@@ -14,10 +14,10 @@ Change the dataset.text_file for configs/experiment/xxx/xxx.yaml
 ### RUN
 ```
 pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu121
-pip install -r requirements.txt
-python -m pip install setuptools==69.5.1 
-pip install pytorch-lightning==1.8.6
-pip install packaging
-pip install flash_attn==1.0.7 --no-build-isolation
+pip install -r requirements.txt --no-deps
+python -m pip install setuptools==69.5.1  --no-deps
+pip install pytorch-lightning==1.8.6 --no-deps
+pip install packaging --no-deps
+pip install flash_attn==1.0.7 --no-build-isolation --no-deps
 python train.py experiment='dnabert2/dnabert2_hg38_pretrain' wandb=null
 ```
