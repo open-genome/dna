@@ -13,8 +13,6 @@ Change the dataset.text_file for configs/experiment/xxx/xxx.yaml
 
 ### RUN
 ```
-conda create -n dna python==3.8
-conda activate dna
 pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirements.txt
 python -m pip install setuptools==69.5.1 
