@@ -17,6 +17,6 @@ pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https
 pip install -r requirements.txt --no-deps
 pip install pytorch-lightning==1.8.6 --no-deps
 pip install packaging --no-deps
-pip install flash_attn==1.0.7 --no-build-isolation --no-deps
+pip install flash_attn --no-build-isolation --no-deps
 python3 train.py experiment='dnabert2/dnabert2_hg38_pretrain' wandb=null
 ```
