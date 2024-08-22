@@ -1392,7 +1392,7 @@ class DNABert2Pretrain(SequenceDataset):
             )
         elif self.tokenizer_name == 'bpe':
             print("**using pretrained AIRI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained('zhihan1996/DNABERT-2-117M')
+            self.tokenizer = AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/DNABERT-2-117M")
         elif self.tokenizer_name == "kmer":
             print("**using pretrained InstaDeepAI tokenizer**")
             self.tokenizer = AutoTokenizer.from_pretrained("InstaDeepAI/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
