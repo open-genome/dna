@@ -21,5 +21,18 @@ pip install flash_attn --no-build-isolation --no-deps
 pip install lightning_utilities --no-deps
 pip install torchmetrics
 pip install tensorboardX
-python3 train.py experiment='dnabert2/dnabert2_hg38_pretrain' wandb=null trainer.devices=8
+```
+
+```
+
+small dataset: python3 train.py experiment='dnabert2/dnabert2_hg38_pretrain' wandb=null trainer.devices=8
+```
+
+or
+
+
+medium dataset:
+
+```
+python3 train.py experiment='dnabert2/dnabert2_pretrain' wandb=null trainer.devices=8
 ```
