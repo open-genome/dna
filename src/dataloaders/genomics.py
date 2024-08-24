@@ -23,6 +23,9 @@ from src.dataloaders.datasets.deepsea import DeepSEADataset
 from src.dataloaders.datasets.gue import GUEDataset
 from src.dataloaders.datasets.dnabert2 import DNABERT2Dataset
 from src.dataloaders.datasets.dnaberts import DNABERTSDataset
+import os
+
+root = os.getenv('PROJECT_ROOT')
 
 """
 
@@ -108,10 +111,10 @@ class HG38(SequenceDataset):
             )
         elif self.tokenizer_name == 'bpe':
             print("**using pretrained AIRI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/DNABERT-2-117M")
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/DNABERT-2-117M")
         elif self.tokenizer_name == "kmer":
             print("**using pretrained InstaDeepAI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
 
         self.vocab_size = len(self.tokenizer)
 
@@ -286,10 +289,10 @@ class GenomicBenchmark(HG38):
             )
         elif self.tokenizer_name == 'bpe':
             print("**using pretrained AIRI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/DNABERT-2-117M")
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/DNABERT-2-117M")
         elif self.tokenizer_name == "kmer":
             print("**using pretrained InstaDeepAI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
         
         # Create all splits: torch datasets (only train/test in this benchmark)
         self.dataset_train, self.dataset_val = [
@@ -380,10 +383,10 @@ class NucleotideTransformer(HG38):
             )
         elif self.tokenizer_name == 'bpe':
             print("**using pretrained AIRI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained('zhihan1996/DNABERT-2-117M')
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/DNABERT-2-117M")
         elif self.tokenizer_name == "kmer":
             print("**using pretrained InstaDeepAI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("InstaDeepAI/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
 
         # Create all splits: torch datasets (only train/test in this benchmark)
         self.dataset_train, self.dataset_val = [
@@ -465,10 +468,10 @@ class ChromatinProfile(HG38):
             )
         elif self.tokenizer_name == 'bpe':
             print("**using pretrained AIRI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/DNABERT-2-117M")
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/DNABERT-2-117M")
         elif self.tokenizer_name == "kmer":
             print("**using pretrained InstaDeepAI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("InstaDeepAI/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
 
         self.vocab_size = len(self.tokenizer)
         
@@ -552,10 +555,10 @@ class Species(HG38):
             )
         elif self.tokenizer_name == 'bpe':
             print("**using pretrained AIRI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/DNABERT-2-117M")
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/DNABERT-2-117M")
         elif self.tokenizer_name == "kmer":
             print("**using pretrained InstaDeepAI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("InstaDeepAI/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
 
         self.vocab_size = len(self.tokenizer)
         
@@ -663,10 +666,10 @@ class ICLGenomics(HG38):
             )
         elif self.tokenizer_name == 'bpe':
             print("**using pretrained AIRI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/DNABERT-2-117M")
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/DNABERT-2-117M")
         elif self.tokenizer_name == "kmer":
             print("**using pretrained InstaDeepAI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("InstaDeepAI/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
 
         self.vocab_size = len(self.tokenizer)
         
@@ -825,10 +828,10 @@ class DeepSTARR(HG38):
             )
         elif self.tokenizer_name == 'bpe':
             print("**using pretrained AIRI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/DNABERT-2-117M")
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/DNABERT-2-117M")
         elif self.tokenizer_name == "kmer":
             print("**using pretrained InstaDeepAI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("InstaDeepAI/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
 
         self.vocab_size = len(self.tokenizer)
         
@@ -929,10 +932,10 @@ class DeepSEA(HG38):
             )
         elif self.tokenizer_name == 'bpe':
             print("**using pretrained AIRI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/DNABERT-2-117M")
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/DNABERT-2-117M")
         elif self.tokenizer_name == "kmer":
             print("**using pretrained InstaDeepAI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("InstaDeepAI/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
 
         self.vocab_size = len(self.tokenizer)
         
@@ -1022,10 +1025,10 @@ class GUE(HG38):
             )
         elif self.tokenizer_name == 'bpe':
             print("**using pretrained AIRI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/DNABERT-2-117M")
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/DNABERT-2-117M")
         elif self.tokenizer_name == "kmer":
             print("**using pretrained InstaDeepAI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("InstaDeepAI/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
 
         self.vocab_size = len(self.tokenizer)
         
@@ -1135,10 +1138,10 @@ class BertHG38(SequenceDataset):
             )
         elif self.tokenizer_name == 'bpe':
             print("**using pretrained AIRI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/DNABERT-2-117M")
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/DNABERT-2-117M")
         elif self.tokenizer_name == "kmer":
             print("**using pretrained InstaDeepAI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("InstaDeepAI/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
 
         self.vocab_size = len(self.tokenizer)
 
@@ -1392,10 +1395,10 @@ class DNABert2Pretrain(SequenceDataset):
             )
         elif self.tokenizer_name == 'bpe':
             print("**using pretrained AIRI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/DNABERT-2-117M")
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/DNABERT-2-117M")
         elif self.tokenizer_name == "kmer":
             print("**using pretrained InstaDeepAI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("InstaDeepAI/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
 
         self.vocab_size = len(self.tokenizer)
 
@@ -1573,10 +1576,10 @@ class DNABertSPretrain(SequenceDataset):
             )
         elif self.tokenizer_name == 'bpe':
             print("**using pretrained AIRI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained('zhihan1996/DNABERT-2-117M')
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/DNABERT-2-117M")
         elif self.tokenizer_name == "kmer":
             print("**using pretrained InstaDeepAI tokenizer**")
-            self.tokenizer = AutoTokenizer.from_pretrained("InstaDeepAI/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(root+"/nucleotide-transformer-v2-500m-multi-species", trust_remote_code=True)
 
         self.vocab_size = len(self.tokenizer)
 

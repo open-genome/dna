@@ -35,6 +35,8 @@ if flash_attn_qkvpacked_func is not None:
 
 logger = logging.getLogger(__name__)
 
+import os
+root = os.getenv('PROJECT_ROOT')
 
 class BertEmbeddings(nn.Module):
 
@@ -782,7 +784,7 @@ class BertForMaskedLM(BertPreTrainedModel):
         if self.hyena_framework:
             input_ids = batch[0]
             from transformers import AutoTokenizer
-            attention_mask = input_ids!=AutoTokenizer.from_pretrained("/mnt/bn/jcyk/mlx/users/jcyk.cai/playground/TXR/dna/DNABERT-2-117M").pad_token_id
+            attention_mask = input_ids!=AutoTokenizer.from_pretrained(root+"/DNABERT-2-117M").pad_token_id
             labels = batch[2]
         if (input_ids is not None) == (inputs_embeds is not None):
             raise ValueError('Must specify either input_ids or input_embeds!')

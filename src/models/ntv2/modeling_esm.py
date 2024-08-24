@@ -101,8 +101,17 @@ class RotaryEmbedding(torch.nn.Module):
     def __init__(self, dim: int):
         super().__init__()
         # Generate and save the inverse frequency buffer (non trainable)
-        inv_freq = 1.0 / (10000 ** (torch.arange(0, dim, 2).float() / dim))
-        inv_freq = inv_freq
+        inv_freq1 = 1.0 / (100000 ** (torch.arange(0, dim, 2).float() / dim))
+        inv_freq1 = inv_freq1
+        recpt_field = nn.Parameter(torch.tensor(0.5))
+        inv_freq2 = torch.ones_like(inv_freq1)*recpt_field
+        inv_freq2 = 1.0 / (100000 ** inv_freq2)
+        self.alpha = nn.Parameter(torch.tensor(0.95))
+        self.beta = nn.Parameter(torch.tensor(0.05))
+        
+        # Final inv_freq
+        inv_freq = self.alpha * inv_freq2 + self.beta * inv_freq1
+        # inv_freq = inv_freq1
         self.register_buffer("inv_freq", inv_freq)
 
         self._seq_len_cached = None
@@ -313,6 +322,9 @@ class EsmSelfAttention(nn.Module):
         self.query = nn.Linear(config.hidden_size, self.all_head_size)
         self.key = nn.Linear(config.hidden_size, self.all_head_size)
         self.value = nn.Linear(config.hidden_size, self.all_head_size)
+        self.query.is_qkv = True
+        self.key.is_qkv = True
+        # self.value.is_qkv = True
 
         self.dropout = nn.Dropout(config.attention_probs_dropout_prob)
         self.position_embedding_type = position_embedding_type or getattr(
@@ -812,6 +824,11 @@ class EsmPreTrainedModel(PreTrainedModel):
             module.weight.data.normal_(mean=0.0, std=self.config.initializer_range)
             if module.bias is not None:
                 module.bias.data.zero_()
+                if hasattr(module, 'is_qkv'): 
+                    for i in range(0, module.bias.size(0), 2):
+                        module.bias.data[i] = 0   
+                        if i + 1 < module.bias.size(0):
+                            module.bias.data[i+1] = 2
         elif isinstance(module, nn.Embedding):
             module.weight.data.normal_(mean=0.0, std=self.config.initializer_range)
             if module.padding_idx is not None:
@@ -1113,6 +1130,8 @@ class EsmForMaskedLM(EsmPreTrainedModel):
         self.esm = EsmModel(config, add_pooling_layer=False)
         self.lm_head = EsmLMHead(config)
         self.hyena_framework = config.hyena_framework
+        self.finetune = config.finetune
+        self.d_model = config.hidden_size
 
         self.init_weights()
 
@@ -1133,7 +1152,7 @@ class EsmForMaskedLM(EsmPreTrainedModel):
     )
     def forward(
         self,
-        batch,
+        batch = None,
         input_ids: Optional[torch.LongTensor] = None,
         attention_mask: Optional[torch.Tensor] = None,
         position_ids: Optional[torch.LongTensor] = None,
@@ -1155,7 +1174,10 @@ class EsmForMaskedLM(EsmPreTrainedModel):
         kwargs (`Dict[str, any]`, optional, defaults to *{}*):
             Used to hide legacy arguments that have been deprecated.
         """
-        input_ids = batch[0]
+        if len(batch.shape)!=2:
+            input_ids = batch[0]
+        else:
+            input_ids = batch
         from transformers import AutoTokenizer
         attention_mask = input_ids!=AutoTokenizer.from_pretrained('zhihan1996/DNABERT-2-117M').pad_token_id
 
@@ -1176,6 +1198,8 @@ class EsmForMaskedLM(EsmPreTrainedModel):
             return_dict=return_dict,
         )
         sequence_output = outputs[0]
+        if self.finetune:
+            return sequence_output, None
         prediction_scores = self.lm_head(sequence_output)
 
         masked_lm_loss = None
@@ -1210,6 +1234,15 @@ class EsmForMaskedLM(EsmPreTrainedModel):
 
     def predict_contacts(self, tokens, attention_mask):
         return self.esm.predict_contacts(tokens, attention_mask=attention_mask)
+    
+    @property
+    def d_output(self):
+        """Model /embedding dimension, used for decoder mapping.
+
+        """
+        if getattr(self, "d_model", None) is None:
+            raise NotImplementedError("SequenceModule instantiation must set d_output")
+        return self.d_model
 
 
 class EsmLMHead(nn.Module):
