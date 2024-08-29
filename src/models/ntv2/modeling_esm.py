@@ -90,6 +90,74 @@ def average_product_correct(x):
     normalized = x - avg
     return normalized
 
+class CoPE(nn.Module):
+    def __init__(self, npos_max, head_dim):
+        super().__init__()
+        self.npos_max = npos_max
+        self.pos_emb = nn.Parameter(torch.empty(1, head_dim, npos_max))
+        nn.init.normal_(self.pos_emb, std=0.01)
+        self.pos_emb_scale = nn.Parameter(torch.zeros(1, head_dim, npos_max))
+        self.pos_emb_scale.data.fill_(0.01)
+        self.pos_emb_scale.requires_grad = True
+
+    def forward(self, query, attn_logits):
+        # Compute positions
+        gates = torch.sigmoid(attn_logits)
+        pos = gates.flip(-1).cumsum(dim=-1).flip(-1)
+        pos = pos.clamp(max=self.npos_max - 1)
+        
+        # Interpolate from integer positions
+        pos_ceil = pos.ceil().long()
+        pos_floor = pos.floor().long()
+        logits_int = torch.matmul(query, self.pos_emb)
+        logits_ceil = logits_int.gather(-1, pos_ceil)
+        logits_floor = logits_int.gather(-1, pos_floor)
+        w = pos - pos_floor
+        return logits_ceil * w + logits_floor * (1 - w)
+
+class CoPEAttention(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.num_attention_heads = config.num_attention_heads
+        self.attention_head_size = int(config.hidden_size / config.num_attention_heads)
+        self.all_head_size = self.num_attention_heads * self.attention_head_size
+
+        self.query = nn.Linear(config.hidden_size, self.all_head_size)
+        self.key = nn.Linear(config.hidden_size, self.all_head_size)
+        self.value = nn.Linear(config.hidden_size, self.all_head_size)
+
+        self.cope = CoPE(config.max_position_embeddings, self.attention_head_size)
+        
+        self.dropout = nn.Dropout(config.attention_probs_dropout_prob)
+
+    def transpose_for_scores(self, x):
+        new_x_shape = x.size()[:-1] + (self.num_attention_heads, self.attention_head_size)
+        x = x.view(*new_x_shape)
+        return x.permute(0, 2, 1, 3)
+
+    def forward(self, hidden_states, attention_mask=None):
+        query_layer = self.transpose_for_scores(self.query(hidden_states))
+        key_layer = self.transpose_for_scores(self.key(hidden_states))
+        value_layer = self.transpose_for_scores(self.value(hidden_states))
+
+        attention_scores = torch.matmul(query_layer, key_layer.transpose(-1, -2))
+        attention_scores = attention_scores / math.sqrt(self.attention_head_size)
+        
+        if attention_mask is not None:
+            attention_scores = attention_scores + attention_mask
+
+        cope_scores = self.cope(query_layer, attention_scores)
+        attention_scores = attention_scores + cope_scores
+
+        attention_probs = nn.Softmax(dim=-1)(attention_scores)
+        attention_probs = self.dropout(attention_probs)
+
+        context_layer = torch.matmul(attention_probs, value_layer)
+        context_layer = context_layer.permute(0, 2, 1, 3).contiguous()
+        new_context_layer_shape = context_layer.size()[:-2] + (self.all_head_size,)
+        context_layer = context_layer.view(*new_context_layer_shape)
+
+        return context_layer
 
 class RotaryEmbedding(torch.nn.Module):
     """
