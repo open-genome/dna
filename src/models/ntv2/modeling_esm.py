@@ -98,21 +98,19 @@ class RotaryEmbedding(torch.nn.Module):
     matrices which depend on their relative positions.
     """
 
-    def __init__(self, dim: int):
+    def __init__(self, dim: int, num_heads: int, initial_alpha: float = 0.95, initial_beta: float = 0.05, initial_recpt_field: float = 0.5):
         super().__init__()
-        # Generate and save the inverse frequency buffer (non trainable)
-        inv_freq1 = 1.0 / (100000 ** (torch.arange(0, dim, 2).float() / dim))
-        inv_freq1 = inv_freq1
-        recpt_field = nn.Parameter(torch.tensor(0.5))
-        inv_freq2 = torch.ones_like(inv_freq1)*recpt_field
-        inv_freq2 = 1.0 / (100000 ** inv_freq2)
-        self.alpha = nn.Parameter(torch.tensor(0.95))
-        self.beta = nn.Parameter(torch.tensor(0.05))
+        self.dim = dim
+        self.num_heads = num_heads
         
-        # Final inv_freq
-        inv_freq = self.alpha * inv_freq2 + self.beta * inv_freq1
-        # inv_freq = inv_freq1
+        # Generate and save the inverse frequency buffer (non trainable)
+        inv_freq = 1.0 / (100000 ** (torch.arange(0, dim, 2).float() / dim))
         self.register_buffer("inv_freq", inv_freq)
+
+        # Create separate parameters for each head
+        self.recpt_field = nn.Parameter(torch.full((num_heads,), initial_recpt_field))
+        self.alpha = nn.Parameter(torch.full((num_heads,), initial_alpha))
+        self.beta = nn.Parameter(torch.full((num_heads,), initial_beta))
 
         self._seq_len_cached = None
         self._cos_cached = None
@@ -125,14 +123,26 @@ class RotaryEmbedding(torch.nn.Module):
         # or if we're on a new device (possibly due to tracing for instance)
         if seq_len != self._seq_len_cached or self._cos_cached.device != x.device:
             self._seq_len_cached = seq_len
-            t = torch.arange(x.shape[seq_dimension], device=x.device).type_as(
-                self.inv_freq
-            )
-            freqs = torch.outer(t, self.inv_freq)
-            emb = torch.cat((freqs, freqs), dim=-1).to(x.device)
+            t = torch.arange(x.shape[seq_dimension], device=x.device).type_as(self.inv_freq)
+            
+            # Calculate for each head
+            cos_cached = []
+            sin_cached = []
+            for head in range(self.num_heads):
+                inv_freq2 = torch.full_like(self.inv_freq, self.recpt_field[head])
+                inv_freq2 = 1.0 / (100000 ** inv_freq2)
+                
+                # Final inv_freq for this head
+                inv_freq_head = self.alpha[head] * inv_freq2 + self.beta[head] * self.inv_freq
+                
+                freqs = torch.outer(t, inv_freq_head)
+                emb = torch.cat((freqs, freqs), dim=-1).to(x.device)
 
-            self._cos_cached = emb.cos()[None, None, :, :]
-            self._sin_cached = emb.sin()[None, None, :, :]
+                cos_cached.append(emb.cos()[None, :, :])
+                sin_cached.append(emb.sin()[None, :, :])
+
+            self._cos_cached = torch.stack(cos_cached, dim=0)  # [num_heads, 1, seq_len, dim]
+            self._sin_cached = torch.stack(sin_cached, dim=0)  # [num_heads, 1, seq_len, dim]
 
         return self._cos_cached, self._sin_cached
 
@@ -143,10 +153,16 @@ class RotaryEmbedding(torch.nn.Module):
             k, seq_dimension=-2
         )
 
-        return (
-            apply_rotary_pos_emb(q, self._cos_cached, self._sin_cached),
-            apply_rotary_pos_emb(k, self._cos_cached, self._sin_cached),
-        )
+        # Apply rotary embeddings separately for each head
+        q_out = []
+        k_out = []
+        for i in range(self.num_heads):
+            q_head = apply_rotary_pos_emb(q[:, i], self._cos_cached[i], self._sin_cached[i])
+            k_head = apply_rotary_pos_emb(k[:, i], self._cos_cached[i], self._sin_cached[i])
+            q_out.append(q_head)
+            k_out.append(k_head)
+
+        return torch.stack(q_out, dim=1), torch.stack(k_out, dim=1)
 
 
 class EsmContactPredictionHead(nn.Module):
@@ -340,7 +356,7 @@ class EsmSelfAttention(nn.Module):
                 2 * config.max_position_embeddings - 1, self.attention_head_size
             )
         elif self.position_embedding_type == "rotary":
-            self.rotary_embeddings = RotaryEmbedding(dim=self.attention_head_size)
+            self.rotary_embeddings = RotaryEmbedding(dim=self.attention_head_size, num_heads=self.num_attention_heads)
 
         self.is_decoder = config.is_decoder
 
