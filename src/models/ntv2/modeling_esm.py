@@ -40,7 +40,7 @@ from transformers.modeling_utils import (
 )
 from transformers.utils import logging
 
-from .esm_config import EsmConfig
+from esm_config import EsmConfig
 
 logger = logging.get_logger(__name__)
 
@@ -61,6 +61,8 @@ def rotate_half(x):
 
 
 def apply_rotary_pos_emb(x, cos, sin):
+    if len(x.shape)==3:
+        x = x.unsqueeze(1)
     cos = cos[:, :, : x.shape[-2], :]
     sin = sin[:, :, : x.shape[-2], :]
 
@@ -197,10 +199,10 @@ class RotaryEmbedding(torch.nn.Module):
             cos_cached = []
             sin_cached = []
             for head in range(self.num_heads):
-                inv_freq2 = torch.full_like(self.inv_freq, self.recpt_field[head])
+                inv_freq2 = torch.full_like(self.inv_freq, self.recpt_field[head].item())
                 inv_freq2 = 1.0 / (100000 ** inv_freq2)
                 
-                # Final inv_freq for this head
+                 # Final inv_freq for this head
                 inv_freq_head = self.alpha[head] * inv_freq2 + self.beta[head] * self.inv_freq
                 
                 freqs = torch.outer(t, inv_freq_head)
@@ -209,8 +211,8 @@ class RotaryEmbedding(torch.nn.Module):
                 cos_cached.append(emb.cos()[None, :, :])
                 sin_cached.append(emb.sin()[None, :, :])
 
-            self._cos_cached = torch.stack(cos_cached, dim=0)  # [num_heads, 1, seq_len, dim]
-            self._sin_cached = torch.stack(sin_cached, dim=0)  # [num_heads, 1, seq_len, dim]
+            self._cos_cached = torch.concatenate(cos_cached, dim=0).unsqueeze(0)  # [1, num_heads, seq_len, dim]
+            self._sin_cached = torch.concatenate(sin_cached, dim=0).unsqueeze(0)  # [1, num_heads, seq_len, dim]
 
         return self._cos_cached, self._sin_cached
 
@@ -221,16 +223,10 @@ class RotaryEmbedding(torch.nn.Module):
             k, seq_dimension=-2
         )
 
-        # Apply rotary embeddings separately for each head
-        q_out = []
-        k_out = []
-        for i in range(self.num_heads):
-            q_head = apply_rotary_pos_emb(q[:, i], self._cos_cached[i], self._sin_cached[i])
-            k_head = apply_rotary_pos_emb(k[:, i], self._cos_cached[i], self._sin_cached[i])
-            q_out.append(q_head)
-            k_out.append(k_head)
-
-        return torch.stack(q_out, dim=1), torch.stack(k_out, dim=1)
+        return (
+            apply_rotary_pos_emb(q, self._cos_cached, self._sin_cached),
+            apply_rotary_pos_emb(k, self._cos_cached, self._sin_cached),
+        )
 
 
 class EsmContactPredictionHead(nn.Module):
@@ -1567,3 +1563,61 @@ def create_position_ids_from_input_ids(
     ) * mask
     return incremental_indices.long() + padding_idx
 
+if __name__ == '__main__':
+    import torch
+
+    # Test RotaryEmbedding
+    def test_rotary_embedding():
+        batch_size, seq_len, dim, num_heads = 2, 10, 64, 8
+        rope = RotaryEmbedding(dim, num_heads)
+        x = torch.randn(batch_size, seq_len, dim)
+        q, k = rope(x, x)
+        assert q.shape == (batch_size, num_heads, seq_len, dim), f"Expected shape {(batch_size, num_heads, seq_len, dim)}, got {q.shape}"
+        assert k.shape == (batch_size, num_heads, seq_len, dim), f"Expected shape {(batch_size, num_heads, seq_len, dim)}, got {k.shape}"
+        print("RotaryEmbedding test passed")
+
+    # Test EsmSelfAttention with RotaryEmbedding
+    def test_rotary_attention():
+        config = EsmConfig(
+            position_embedding_type='rotary',
+            hidden_size=512,
+            num_attention_heads=8,
+            attention_probs_dropout_prob=0.1,
+        )
+        attn = EsmSelfAttention(config)
+        hidden_states = torch.randn(2, 10, config.hidden_size)
+
+        out, = attn(hidden_states)
+        assert out.shape == (2, 10, config.hidden_size), f"Expected shape (2, 10, {config.hidden_size}), got {out.shape}"
+        print("EsmSelfAttention test passed")
+
+    # Test CoPE
+    def test_cope():
+        npos_max, head_dim = 512, 64
+        cope = CoPE(npos_max, head_dim)
+        query = torch.randn(2, 8, 10, head_dim)  # (batch, num_heads, seq_len, head_dim)
+        attn_logits = torch.randn(2, 8, 10, 10)  # (batch, num_heads, seq_len, seq_len)
+        out = cope(query, attn_logits)
+        assert out.shape == (2, 8, 10, 10), f"Expected shape (2, 8, 10, 10), got {out.shape}"
+        print("CoPE test passed")
+
+    # Test CoPEAttention
+    def test_cope_attention():
+        class Config:
+            num_attention_heads = 8
+            hidden_size = 512
+            max_position_embeddings = 512
+            attention_probs_dropout_prob = 0.1
+
+        config = Config()
+        cope_attn = CoPEAttention(config)
+        hidden_states = torch.randn(2, 10, config.hidden_size)
+        out = cope_attn(hidden_states)
+        assert out.shape == (2, 10, config.hidden_size), f"Expected shape (2, 10, {config.hidden_size}), got {out.shape}"
+        print("CoPEAttention test passed")
+
+    # Run tests
+    test_rotary_embedding()
+    test_rotary_attention()
+    test_cope()
+    test_cope_attention()
